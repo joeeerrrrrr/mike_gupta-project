@@ -59,11 +59,11 @@ def scrape(search_response):
 
 	 dislikes = i['statistics']['dislikeCount']
 	 likes = i['statistics']['likeCount']
-	 reputability = likes / dislikes
+	 reputability = int(likes) / int(dislikes)
 	 if reputability >= 0.7:
 		 res.append(temp_res)
 
-		 
+
 	df = pd.DataFrame.from_dict(res)
 
 	return res
