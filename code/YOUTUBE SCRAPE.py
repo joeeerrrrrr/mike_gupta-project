@@ -66,7 +66,20 @@ for i in videos_list_response['items']:
 df = pd.DataFrame.from_dict(res)
 
 print res
-print df
+
+
+#u'tags': [u'facelift', u'natural facelift', u'vampire facelift', u'facial toning', u'youthful looks', u'sapien med', u'sapien medicine']
+for x in res:
+    print "=========="
+    print x['v_title'].encode('ascii', 'ignore').decode('ascii')
+    print x['description'].encode('ascii', 'ignore').decode('ascii')
+    print x['dislikeCount'].encode('ascii', 'ignore').decode('ascii')
+    print x['likeCount'].encode('ascii', 'ignore').decode('ascii')
+    print x['commentCount'].encode('ascii', 'ignore').decode('ascii')
+    if 'tags' in x:
+        print x['tags']
+    print x['publishedAt'].encode('ascii', 'ignore').decode('ascii')
+    print "=========="
 
 df.to_csv("first50scraped.csv", sep='\t', encoding='utf-8')
 
