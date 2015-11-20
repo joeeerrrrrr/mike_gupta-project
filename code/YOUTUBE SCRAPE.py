@@ -22,11 +22,11 @@ YOUTUBE_API_VERSION = "v3"
 youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY) 
 
 def setup():
-	query = raw_input("Enter your query: ")
+	query = raw_input("\n Enter your query: ")
 	argparser.add_argument("--q", help="Search term", default=query) #change the default to the search term you want to search
-	argparser.add_argument("--max-results", help="Max results", default=50) #default number of results which are returned. It can vary from 0 - 100
-	options = argparser.parse_args()# Call the search.list method to retrieve results matching the specified query term.
-	search_response = youtube.search().list(
+	argparser.add_argument("--max-results", help="Max results", default=1) #default number of results which are returned. It can vary from 0 - 100
+	options = argparser.parse_args()
+	search_response = youtube.search().list( # Call the search.list method to retrieve results matching the specified query term.
 	 q=options.q,
 	 type="video",
 	 part="id,snippet",
@@ -55,7 +55,15 @@ def scrape(search_response):
 	 temp_res = dict(v_id = i['id'], v_title = videos[i['id']])
 	 temp_res.update(i['statistics'])
 	 temp_res.update(i['snippet'])
-	 res.append(temp_res)
+
+
+	 dislikes = i['statistics']['dislikeCount']
+	 likes = i['statistics']['likeCount']
+	 reputability = likes / dislikes
+	 if reputability >= 0.7:
+		 res.append(temp_res)
+
+		 
 	df = pd.DataFrame.from_dict(res)
 
 	return res
