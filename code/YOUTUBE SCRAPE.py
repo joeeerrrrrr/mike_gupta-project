@@ -22,7 +22,8 @@ YOUTUBE_API_VERSION = "v3"
 youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY) 
 
 def setup():
-	argparser.add_argument("--q", help="Search term", default="facelift") #change the default to the search term you want to search
+	query = raw_input("Enter your query: ")
+	argparser.add_argument("--q", help="Search term", default=query) #change the default to the search term you want to search
 	argparser.add_argument("--max-results", help="Max results", default=50) #default number of results which are returned. It can vary from 0 - 100
 	options = argparser.parse_args()# Call the search.list method to retrieve results matching the specified query term.
 	search_response = youtube.search().list(
@@ -57,10 +58,8 @@ def scrape(search_response):
 	 res.append(temp_res)
 	df = pd.DataFrame.from_dict(res)
 
-	print res
-	print df
-
-def to_csv():
+	return res
+	# print df
 	df.to_csv("first50scraped.csv", sep='\t', encoding='utf-8')
 
 	first25scraped = open(r'first25scraped.txt','w+')
@@ -71,7 +70,6 @@ def to_csv():
 def main():
 	setup_variable = setup()
 	scrape(setup_variable)
-	to_csv()
 
 if __name__ == '__main__':
 	import profile
