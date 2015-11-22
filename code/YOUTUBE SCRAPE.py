@@ -49,24 +49,24 @@ def scrape(search_response):
 	).execute()
 	res = []
 
-	#print videos_list_response['items']
+	# print videos_list_response['items']
 
 	for i in videos_list_response['items']:
-		temp_res = dict(v_id = i['id'], v_title = videos[i['id']])
-		temp_res.update(i['statistics'])
-		temp_res.update(i['snippet'])
+	 temp_res = dict(v_id = i['id'], v_title = videos[i['id']])
+	 temp_res.update(i['statistics'])
+	 temp_res.update(i['snippet'])
 
 
-		dislikes = i['statistics']['dislikeCount']
-		likes = i['statistics']['likeCount']
-		reputability = int(likes) / int(dislikes)
-		if reputability >= 0.7:
+	 dislikes = i['statistics']['dislikeCount']
+	 likes = i['statistics']['likeCount']
+	 reputability = int(likes) / int(dislikes
+	 if reputability >= 0.7:
 		 res.append(temp_res)
 
 
 	df = pd.DataFrame.from_dict(res)
 
-	print json.dumps(res, indent=4, sort_keys=True)
+	print json.dumps(res[0], indent=4, sort_keys=True)
 	# print df
 	df.to_csv("first50scraped.csv", sep='\t', encoding='utf-8')
 
@@ -80,6 +80,5 @@ def main():
 	scrape(setup_variable)
 
 if __name__ == '__main__':
-	main()
-	# import profile
-	# profile.run("main()")
+	import profile
+	profile.run("main()")
