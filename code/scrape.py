@@ -26,14 +26,31 @@ def setup():
 	argparser.add_argument("--q", help="Search term", default=query) #change the default to the search term you want to search
 	argparser.add_argument("--max-results", help="Max results", default=50) #default number of results which are returned. It can vary from 0 - 100
 	options = argparser.parse_args()
-	search_response = youtube.search().list( # Call the search.list method to retrieve results matching the specified query term.
-	 q=options.q,
-	 type="video",
-	 part="id,snippet",
-	 maxResults=options.max_results
-	).execute()
 
-	return search_response
+	page_tokens = {}
+	responses = []
+	search_response = youtube.search().list( # Call the search.list method to retrieve results matching the specified query term.
+		 q=options.q,
+		 type="video",
+		 part="id,snippet",
+		 maxResults=options.max_results
+		).execute()	
+	responses.append(search_response)
+
+	for i in range(0,4):
+		page_tokens['p' + str(i)] = (search_response['nextPageToken'])
+		search_response = youtube.search().list( # Call the search.list method to retrieve results matching the specified query term.
+		 q=options.q,
+		 type="video",
+		 part="id,snippet",
+		 maxResults=options.max_results,
+		 pageToken = page_tokens['p' + str(i)]
+		).execute()
+		
+
+		responses.append(search_response)
+
+	print json.dumps(responses, indent=4, sort_keys=True)
 
 def scrape(search_response):
 	videos = {} # Add each result to the appropriate list, and then display the lists of matching videos. Filter out channels, and playlists.
@@ -79,7 +96,7 @@ def scrape(search_response):
 
 def main():
 	setup_variable = setup()
-	scrape(setup_variable)
+	# scrape(setup_variable)
 
 if __name__ == '__main__':
 	main()
